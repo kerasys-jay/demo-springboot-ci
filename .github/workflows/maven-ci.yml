@@ -23,7 +23,7 @@ env:
   #    "subscriptionId": "<GUID>",
   #    "tenantId": "<GUID>",
   #  }'
-  AZURE_CREDENTIALS: "${{ secret.AZURE_CREDENTIALS_DEV }}"
+  AZURE_CREDENTIALS: "${{ secrets.AZURE_CREDENTIALS_DEV }}"
 
 on:
   workflow_dispatch:
