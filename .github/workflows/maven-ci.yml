@@ -1,4 +1,4 @@
-name: "[ DEV ] Build and Upload WAR to Azure Blob Storage"
+name: "[ DEV ] Build and Upload to Azure Blob Storage"
 
 # 모든 환경 변수는 Github의 variables 및 secret 에서 관리 합니다.
 
