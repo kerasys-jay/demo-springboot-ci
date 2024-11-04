@@ -12,10 +12,10 @@ env:
   # AZURE Container 이름 (ex : ccoetmpblobcnt)
   AZURE_CONTAINER_NAME: "${{ vars.AZURE_CONTAINER_NAME }}"
 
-  # Application 이름 (ex: war로 생성될 파일 이름 abc.war)
+  # Application 이름 (ex: jar로 생성될 파일 이름 abc.jar)
   APP_NAME: "${{ vars.APP_NAME }}"
 
-  # Azure Credentials (secret에 아래 형태로 추가 DEV | PRD)
+  # Azure Credentials (secrets에 아래 형태로 추가 DEV | PRD)
   #   AZURE_CREDENTIALS_DEV='
   #  {
   #    "clientId": "<GUID>",
