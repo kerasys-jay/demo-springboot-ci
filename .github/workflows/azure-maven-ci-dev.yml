@@ -24,7 +24,7 @@ env:
   #    "tenantId": "<GUID>",
   #  }
   AZURE_CREDENTIALS: "${{ secrets.AZURE_CREDENTIALS_DEV }}"
-
+  AZURE_STORAGE_ACCESS_KEY: "${{ secrets.AZURE_STORAGE_ACCESS_KEY }}"
 on:
   workflow_dispatch:
     branches: [ main ]
@@ -65,18 +65,12 @@ jobs:
           creds: ${{ env.AZURE_CREDENTIALS }}
 
       - name: Upload to Azure Blob Storage
-        uses: azure/CLI@v1
+        uses: azure/storage-blob-upload-action@v1
         with:
-          inlineScript: |
-            echo "Starting upload to Azure Blob Storage..."
-            az storage blob upload \
-              --account-name ${{ env.AZURE_STORAGE_ACCOUNT }} \
-              --container-name ${{ env.AZURE_CONTAINER_NAME }} \
-              --name ${{ env.APP_NAME }}.jar \
-              --file target/${{ env.APP_NAME }}.jar \
-              --overwrite \
-              --auth-mode login
-            echo "Upload completed successfully"
+          connection-string: "DefaultEndpointsProtocol=https;AccountName=${{ env.AZURE_STORAGE_ACCOUNT }};AccountKey=${{ env.AZURE_STORAGE_ACCESS_KEY }};EndpointSuffix=core.windows.net"
+          container-name: ${{ env.AZURE_CONTAINER_NAME }}
+          name: ${{ env.APP_NAME }}.jar
+          file-path: target/${{ env.APP_NAME }}.jar
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
