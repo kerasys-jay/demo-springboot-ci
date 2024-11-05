@@ -10,7 +10,6 @@
     </parent>
     <groupId>com.ktds</groupId>
     <artifactId>demo</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>demo-springboot-ci</name>
     <description>demo-springboot-ci</description>
     <url/>
