@@ -9,22 +9,16 @@ env:
   # AZURE Storage Account 이름 (ex : ccoetmpblob)
   AZURE_STORAGE_ACCOUNT: "${{ vars.AZURE_STORAGE_ACCOUNT }}"
 
-  # AZURE Container 이름 (ex : ccoetmpblobcnt)
-  AZURE_CONTAINER_NAME: "${{ vars.AZURE_CONTAINER_NAME }}"
+  # AZURE Storage Access Key (secrets)
+  AZURE_STORAGE_ACCESS_KEY: "${{ secrets.AZURE_STORAGE_ACCESS_KEY }}"
+
+  # AZURE Container 이름 (ex : ccoetmpblobcnt DEV | PRD)
+  # Container 이름으로 dev 와 prd 구분
+  AZURE_CONTAINER_NAME: "${{ vars.AZURE_CONTAINER_NAME_DEV }}"
 
   # Application 이름 (ex: jar로 생성될 파일 이름 abc.jar)
   APP_NAME: "${{ vars.APP_NAME }}"
 
-  # Azure Credentials (secrets에 아래 형태로 추가 DEV | PRD)
-  #   AZURE_CREDENTIALS_DEV
-  #  {
-  #    "clientId": "<GUID>",
-  #    "clientSecret": "<STRING>",
-  #    "subscriptionId": "<GUID>",
-  #    "tenantId": "<GUID>",
-  #  }
-  AZURE_CREDENTIALS: "${{ secrets.AZURE_CREDENTIALS_DEV }}"
-  AZURE_STORAGE_ACCESS_KEY: "${{ secrets.AZURE_STORAGE_ACCESS_KEY }}"
 on:
   workflow_dispatch:
     branches: [ main ]
