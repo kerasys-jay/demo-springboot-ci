@@ -77,7 +77,7 @@ jobs:
             echo "Upload completed successfully"
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.APP_NAME }}.jar
           path: target/${{ env.APP_NAME }}.jar
