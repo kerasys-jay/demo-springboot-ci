@@ -42,6 +42,7 @@ jobs:
 
       - name: Print Environment Variables
         run: |
+          echo "Workflow Actor = ${{ github.actor }}"
           echo "JAVA_VERSION = ${{ env.JAVA_VERSION }}"
           echo "AZURE_STORAGE_ACCOUNT = ${{ env.AZURE_STORAGE_ACCOUNT }}"
           echo "AZURE_CONTAINER_NAME = ${{ env.AZURE_CONTAINER_NAME }}"
