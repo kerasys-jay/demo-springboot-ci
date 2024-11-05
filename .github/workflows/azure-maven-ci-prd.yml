@@ -1,0 +1,84 @@
+name: "[ PRD ] Build and Upload to Azure Blob Storage"
+
+# 모든 환경 변수는 Github의 variables 및 secrets 에서 관리 합니다.
+
+env:
+  # JAVA 버전 (ex: 17)
+  JAVA_VERSION: "${{ vars.JAVA_VERSION }}"
+
+  # AZURE Storage Account 이름 (ex : ccoetmpblob)
+  AZURE_STORAGE_ACCOUNT: "${{ vars.AZURE_STORAGE_ACCOUNT }}"
+
+  # AZURE Container 이름 (ex : ccoetmpblobcnt)
+  AZURE_CONTAINER_NAME: "${{ vars.AZURE_CONTAINER_NAME }}"
+
+  # Application 이름 (ex: jar로 생성될 파일 이름 abc.jar)
+  APP_NAME: "${{ vars.APP_NAME }}"
+
+  # Azure Credentials (secrets에 아래 형태로 추가 DEV | PRD)
+  #   AZURE_CREDENTIALS_DEV
+  #  {
+  #    "clientId": "<GUID>",
+  #    "clientSecret": "<STRING>",
+  #    "subscriptionId": "<GUID>",
+  #    "tenantId": "<GUID>",
+  #  }
+  AZURE_CREDENTIALS: "${{ secrets.AZURE_CREDENTIALS_PRD }}"
+
+on:
+  workflow_dispatch:
+    branches: [ main ]
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Print Environment Variables
+        run: |
+          echo "JAVA_VERSION = ${{ env.JAVA_VERSION }}"
+          echo "AZURE_STORAGE_ACCOUNT = ${{ env.AZURE_STORAGE_ACCOUNT }}"
+          echo "AZURE_CONTAINER_NAME = ${{ env.AZURE_CONTAINER_NAME }}"
+          echo "APP_NAME = ${{ env.APP_NAME }}"
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests -Dproject.build.finalName=${{ env.APP_NAME }}
+
+      - name: Check target directory
+        run: |
+          echo "Listing target directory contents:"
+          ls -la target/
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ env.AZURE_CREDENTIALS }}
+
+      - name: Upload to Azure Blob Storage
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            echo "Starting upload to Azure Blob Storage..."
+            az storage blob upload \
+              --account-name ${{ env.AZURE_STORAGE_ACCOUNT }} \
+              --container-name ${{ env.AZURE_CONTAINER_NAME }} \
+              --name ${{ env.APP_NAME }}.jar \
+              --file target/${{ env.APP_NAME }}.jar \
+              --auth-mode login
+            echo "Upload completed successfully"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.APP_NAME }}.jar
+          path: target/${{ env.APP_NAME }}.jar

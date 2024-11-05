@@ -1,6 +1,6 @@
 name: "[ DEV ] Build and Upload to Azure Blob Storage"
 
-# 모든 환경 변수는 Github의 variables 및 secret 에서 관리 합니다.
+# 모든 환경 변수는 Github의 variables 및 secrets 에서 관리 합니다.
 
 env:
   # JAVA 버전 (ex: 17)
@@ -16,13 +16,13 @@ env:
   APP_NAME: "${{ vars.APP_NAME }}"
 
   # Azure Credentials (secrets에 아래 형태로 추가 DEV | PRD)
-  #   AZURE_CREDENTIALS_DEV='
+  #   AZURE_CREDENTIALS_DEV
   #  {
   #    "clientId": "<GUID>",
   #    "clientSecret": "<STRING>",
   #    "subscriptionId": "<GUID>",
   #    "tenantId": "<GUID>",
-  #  }'
+  #  }
   AZURE_CREDENTIALS: "${{ secrets.AZURE_CREDENTIALS_DEV }}"
 
 on:
