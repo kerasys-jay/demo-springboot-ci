@@ -59,11 +59,6 @@ jobs:
           echo "Listing target directory contents:"
           ls -la target/
 
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ env.AZURE_CREDENTIALS }}
-
       - name: Upload to Azure Blob Storage
         uses: azure/storage-blob-upload-action@v1
         with:
