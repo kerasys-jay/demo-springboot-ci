@@ -21,7 +21,7 @@ env:
 
 on:
   workflow_dispatch:
-    branches: [ main ]
+    branches: [ dev ]
 
 jobs:
   build-and-upload:
