@@ -21,7 +21,14 @@ env:
 
 on:
   workflow_dispatch:
-    branches: [ dev ]
+    inputs:
+      branch:
+        description: 'Branch to build'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
 
 jobs:
   build-and-upload:
@@ -30,6 +37,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
 
       - name: Print Environment Variables
         run: |
