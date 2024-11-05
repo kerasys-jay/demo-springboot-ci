@@ -37,6 +37,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
 
       - name: Print Environment Variables
         run: |
@@ -46,7 +48,7 @@ jobs:
           echo "APP_NAME = ${{ env.APP_NAME }}"
 
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
@@ -61,7 +63,7 @@ jobs:
           ls -la target/
 
       - name: Upload to Azure Blob Storage
-        uses: azure/CLI@v1
+        uses: azure/CLI@v2
         with:
           inlineScript: |
             echo "Starting upload to Azure Blob Storage..."
