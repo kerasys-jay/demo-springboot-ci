@@ -21,7 +21,14 @@ env:
 
 on:
   workflow_dispatch:
-    branches: [ main ]
+    inputs:
+      branch:
+        description: 'Branch to build'
+        required: true
+        default: 'main'
+        type: choice
+        options:
+          - main
 
 jobs:
   build-and-upload:
