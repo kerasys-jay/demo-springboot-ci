@@ -4,6 +4,7 @@ name: "[ DEV ] Build and Upload to Azure Blob Storage"
 
 env:
   # JAVA 버전 (ex: 17)
+  # self hosted 기반으로 build 시 삭제
   JAVA_VERSION: "${{ vars.JAVA_VERSION }}"
 
   # AZURE Storage Account 이름 (ex : ccoetmpblob)
@@ -48,6 +49,7 @@ jobs:
           echo "AZURE_CONTAINER_NAME = ${{ env.AZURE_CONTAINER_NAME }}"
           echo "APP_NAME = ${{ env.APP_NAME }}"
 
+  # self hosted 기반으로 build 시 삭제
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
