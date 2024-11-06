@@ -53,15 +53,13 @@ jobs:
           ls -la target/
 
       - name: Upload to Azure Blob Storage
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            echo "Starting upload to Azure Blob Storage..."
-            az storage blob upload \
-              --account-name ${{ env.AZURE_STORAGE_ACCOUNT }} \
-              --container-name ${{ env.AZURE_CONTAINER_NAME }} \
-              --name ${{ env.APP_NAME }}.jar \
-              --file target/*.jar \
-              --overwrite \
-              --account-key ${{ env.AZURE_STORAGE_ACCESS_KEY }}
-            echo "Upload completed successfully"
+        run: |
+          echo "Starting upload to Azure Blob Storage..."
+          az storage blob upload \
+            --account-name ${{ env.AZURE_STORAGE_ACCOUNT }} \
+            --container-name ${{ env.AZURE_CONTAINER_NAME }} \
+            --name ${{ env.APP_NAME }}.jar \
+            --file target/*.jar \
+            --overwrite \
+            --account-key ${{ env.AZURE_STORAGE_ACCESS_KEY }}
+          echo "Upload completed successfully"
