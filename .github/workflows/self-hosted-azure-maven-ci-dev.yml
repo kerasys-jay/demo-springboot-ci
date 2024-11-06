@@ -1,0 +1,67 @@
+name: "[ DEV ] Build and Upload to Azure Blob Storage"
+
+# 모든 환경 변수는 Github의 variables 및 secrets 에서 관리 합니다.
+
+env:
+  # AZURE Storage Account 이름 (ex : ccoetmpblob)
+  AZURE_STORAGE_ACCOUNT: "${{ vars.AZURE_STORAGE_ACCOUNT }}"
+
+  # AZURE Storage Access Key (secrets)
+  AZURE_STORAGE_ACCESS_KEY: "${{ secrets.AZURE_STORAGE_ACCESS_KEY }}"
+
+  # AZURE Container 이름 (ex : ccoetmpblobcnt DEV | PRD)
+  # Container 이름으로 dev 와 prd 구분
+  AZURE_CONTAINER_NAME: "${{ vars.AZURE_CONTAINER_NAME_DEV }}"
+
+  # Application 이름 (ex: jar로 생성될 파일 이름 abc.jar)
+  APP_NAME: "${{ vars.APP_NAME }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to build'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+
+jobs:
+  build-and-upload:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Print Environment Variables
+        run: |
+          echo "Workflow Actor = ${{ github.actor }}"
+          echo "AZURE_STORAGE_ACCOUNT = ${{ env.AZURE_STORAGE_ACCOUNT }}"
+          echo "AZURE_CONTAINER_NAME = ${{ env.AZURE_CONTAINER_NAME }}"
+          echo "APP_NAME = ${{ env.APP_NAME }}"
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      - name: Check target directory
+        run: |
+          echo "Listing target directory contents:"
+          ls -la target/
+
+      - name: Upload to Azure Blob Storage
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            echo "Starting upload to Azure Blob Storage..."
+            az storage blob upload \
+              --account-name ${{ env.AZURE_STORAGE_ACCOUNT }} \
+              --container-name ${{ env.AZURE_CONTAINER_NAME }} \
+              --name ${{ env.APP_NAME }}.jar \
+              --file target/*.jar \
+              --overwrite \
+              --account-key ${{ env.AZURE_STORAGE_ACCESS_KEY }}
+            echo "Upload completed successfully"
